@@ -1,6 +1,13 @@
 # Default values for helloworld-chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+versions:
+  - name: efs-elasticsearch-data
+  - name: efs-elasticsearch-logging-usr
+  - name: efs-elasticsearch-usr-datanode
+  - name: efs-elasticsearch-usr-ingestnode
+  - name: efs-elasticsearch-data-ingestnode
+  - name: efs-elasticsearch-data-datanode
 
 replicaCount: 1
 
@@ -61,12 +68,3 @@ configMap:
   name_kibana: kibana-config
   name_logstash_config: logstash-config
   name_logstash_pipeline: logstash-pipeline
-
-
-versions:
-  - name: efs-elasticsearch-data
-  - name: efs-elasticsearch-logging-usr
-  - name: efs-elasticsearch-usr-datanode
-  - name: efs-elasticsearch-usr-ingestnode
-  - name: efs-elasticsearch-data-ingestnode
-  - name: efs-elasticsearch-data-datanode
