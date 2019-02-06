@@ -61,3 +61,12 @@ configMap:
   name_kibana: kibana-config
   name_logstash_config: logstash-config
   name_logstash_pipeline: logstash-pipeline
+
+
+versions:
+  - name: efs-elasticsearch-data
+  - name: efs-elasticsearch-logging-usr
+  - name: efs-elasticsearch-usr-datanode
+  - name: efs-elasticsearch-usr-ingestnode
+  - name: efs-elasticsearch-data-ingestnode
+  - name: efs-elasticsearch-data-datanode
