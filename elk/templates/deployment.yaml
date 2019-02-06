@@ -21,6 +21,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/instance: {{ .Release.Name }}
+        component: elasticsearch
+        role: {{ .Values.service_master.role }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       initContainers:  
