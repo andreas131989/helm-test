@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.configMap.name_kibana }}
   namespace: {{ .Values.namespace.name }}
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   kibana.yml: |
     ---

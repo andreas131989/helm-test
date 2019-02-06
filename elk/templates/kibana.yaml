@@ -5,15 +5,19 @@ metadata:
   namespace: {{ .Values.namespace.name }}
   labels:
     component: kibana
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: 1
   selector:
     matchLabels:
      component: kibana
+     app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
         component: kibana
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
       - name: kibana

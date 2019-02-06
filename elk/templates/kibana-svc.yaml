@@ -3,6 +3,8 @@ kind: Service
 metadata:
   labels:
     component: kibana
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   name: {{ .Values.service_kibana.name }}
   namespace: {{ .Values.namespace.name }}
 spec:
@@ -12,4 +14,5 @@ spec:
     targetPort: 5601
   selector:
     component: kibana
+    app.kubernetes.io/instance: {{ .Release.Name }}
   type: {{ .Values.service_kibana.type }}
