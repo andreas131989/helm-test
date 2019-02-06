@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+deployment:
+  master_name: elasticsearch-master
+
 image:
   repository: docker.elastic.co/elasticsearch/elasticsearch
   tag: 6.4.3
@@ -13,6 +16,7 @@ serviceAccount:
   name: elasticsearch-logging
 
 service_master:
+  name: elasticsearch-discovery
   type: ClusterIP
   port: 9300
   role: master
