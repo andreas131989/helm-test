@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    k8s-app: elasticsearch-logging
+    app.kubernetes.io/name: {{ include "elk.name" . }}
+    helm.sh/chart: {{ include "elk.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace.name }}

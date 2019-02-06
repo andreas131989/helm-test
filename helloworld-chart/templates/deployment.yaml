@@ -1,51 +1,97 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helloworld-chart.fullname" . }}
+  namespace: {{ .Values.namespace.name }}
+  name: {{ include "elk.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "helloworld-chart.name" . }}
-    helm.sh/chart: {{ include "helloworld-chart.chart" . }}
+    app.kubernetes.io/name: {{ include "elk.name" . }}
+    helm.sh/chart: {{ include "elk.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    component: elasticsearch
+    role: {{ .Values.service_master.role }}
+    k8s-addon: logging-elasticsearch.addons.k8s.io
+    k8s-app: elasticsearch-logging
+    version: v1
+    kubernetes.io/cluster-service: "true"
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "helloworld-chart.name" . }}
+      app.kubernetes.io/name: {{ include "elk.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "helloworld-chart.name" . }}
+        app.kubernetes.io/name: {{ include "elk.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      initContainers:  
+      - name: init-sysctl      
+        image: busybox           
+        imagePullPolicy: IfNotPresent             
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:         
+          privileged: true     
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+          - name: CLUSTER_NAME
+            value: "tstesdb"
+          - name: DISCOVERY_SERVICE
+            value: "elasticsearch-discovery"
+          - name: NETWORK_HOST 
+            value: "_eth0_"
+          - name: ES_JAVA_OPTS      
+            value: -Xms512m -Xmx512m
+          - name: MAX_LOCAL_STORAGE_NODES
+            value: "1"
+          - name: HTTP_ENABLE
+            value: "false"
+          - name: HTTP_HOST
+            value: "localhost"
+          - name: NODE_NAME
+            value: "master"
+          - name: NODE_MASTER
+            value: "true"
+          - name: NODE_INGEST
+            value: "false"
+          - name: NODE_DATA
+            value: "false"
+          - name: PROCESSORS
+            valueFrom:
+              resourceFieldRef:
+                resource: limits.cpu
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 9300
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+            requests:
+              cpu: 0.10
+            limits:
+              cpu: 0.80
+          volumeMounts:
+          - name: elasticsearch-config-volume
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            subPath: elasticsearch.yml
+          - name: storage
+            mountPath: /data        
+        volumes:
+        - name: storage
+          emptyDir:
+            medium: ""
+        - name: elasticsearch-config-volume
+          configMap:
+            name: {{ .Values.configMap.name }}
+            defaultMode: 420
+            items:
+            - key: elasticsearch.yml
+              path: elasticsearch.yml
