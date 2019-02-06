@@ -6,6 +6,8 @@ replicaCount: 1
 
 deployment:
   master_name: elasticsearch-master
+  data_name: elasticsearch-data
+  ingest_name: elasticsearch-ingest
 
 image:
   repository: docker.elastic.co/elasticsearch/elasticsearch
@@ -17,9 +19,20 @@ serviceAccount:
 
 service_master:
   name: elasticsearch-discovery
-  type: ClusterIP
   port: 9300
   role: master
+
+service_data:
+  name: elasticsearch
+  type: ClusterIP
+  port: 9200
+  role: data
+
+service_ingest:
+  name: elasticsearch-ingest
+  type: ClusterIP
+  port: 9200
+  role: ingest
 
 namespace: 
   name: monitoring
