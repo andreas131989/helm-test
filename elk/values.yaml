@@ -15,9 +15,18 @@ image:
   pullPolicy: IfNotPresent
   repository_kibana: docker.elastic.co/kibana/kibana-oss
   tag_kibana: 6.3.2
+  repository_logstash: docker.elastic.co/logstash/logstash
+  tag_logstash: 6.5.4
+
+cluster:
+  role_name: elasticsearch-logging
+  binding_name: elasticsearch-logging
 
 kibana_deployment:
   name: kibana
+
+logstash_deployment:
+  name: logstash
 
 serviceAccount:
   name: elasticsearch-logging
@@ -50,3 +59,5 @@ namespace:
 configMap:
   name: elasticsearch-config
   name_kibana: kibana-config
+  name_logstash_config: logstash-config
+  name_logstash_pipeline: logstash-pipeline
