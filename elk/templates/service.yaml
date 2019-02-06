@@ -13,7 +13,7 @@ spec:
     - port: {{ .Values.service_master.port }}
       protocol: TCP
       name: transport
-  clusterIP: none
+  clusterIP: None
   selector:
     app.kubernetes.io/instance: {{ .Release.Name }}
     component: elasticsearch
