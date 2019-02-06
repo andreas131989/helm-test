@@ -5,8 +5,6 @@ metadata:
   namespace: {{ .Values.namespace.name }}
   labels:
     k8s-app: elasticsearch-logging
-    app.kubernetes.io/name: {{ include "elk.name" . }}
-    helm.sh/chart: {{ include "elk.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:

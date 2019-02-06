@@ -1,24 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: { .Values.service.name }}
+  name: {{ .Values.service_master.name }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    app.kubernetes.io/name: {{ include "elk.name" . }}
-    helm.sh/chart: {{ include "elk.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     component: elasticsearch
     role: {{ .Values.service_master.role }}
 spec:
-  type: {{ .Values.service_master.type }}
   ports:
     - port: {{ .Values.service_master.port }}
       protocol: TCP
       name: transport
   clusterIP: none
   selector:
-    app.kubernetes.io/name: {{ include "elk.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     component: elasticsearch
     role: {{ .Values.service_master.role }}
