@@ -4,10 +4,10 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ .name }}
-  namespace: {{ .Values.namespace.name }}
+  namespace: {{ $.Values.namespace.name }}
   labels:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
     version: {{ .name }}
 spec:
   accessModes:
