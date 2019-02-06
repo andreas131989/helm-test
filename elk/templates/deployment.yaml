@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.namespace.name }}
-  name: {{ .Values.deployment.master_name }}
+  name: {{ include "elk.fullname" . }}
   labels:
     app.kubernetes.io/name: {{ include "elk.name" . }}
     helm.sh/chart: {{ include "elk.chart" . }}
