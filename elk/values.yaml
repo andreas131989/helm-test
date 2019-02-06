@@ -13,6 +13,11 @@ image:
   repository: docker.elastic.co/elasticsearch/elasticsearch
   tag: 6.4.3
   pullPolicy: IfNotPresent
+  repository_kibana: docker.elastic.co/kibana/kibana-oss
+  tag_kibana: 6.3.2
+
+kibana_deployment:
+  name: kibana
 
 serviceAccount:
   name: elasticsearch-logging
@@ -34,8 +39,14 @@ service_ingest:
   port: 9200
   role: ingest
 
+service_kibana:
+  name: kibana
+  type: LoadBalancer
+  port: 5601
+
 namespace: 
   name: monitoring
 
 configMap:
   name: elasticsearch-config
+  name_kibana: kibana-config

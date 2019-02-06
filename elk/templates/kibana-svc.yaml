@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: kibana
+  name: {{ .Values.service_kibana.name }}
+  namespace: {{ .Values.namespace.name }}
+spec:
+  ports:
+  - port: {{ .Values.service_kibana.port }}
+    protocol: TCP
+    targetPort: 5601
+  selector:
+    component: kibana
+  type: {{ .Values.service_kibana.type }}

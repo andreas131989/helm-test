@@ -1,0 +1,45 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.kibana_deployment.name }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    component: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     component: kibana
+  template:
+    metadata:
+      labels:
+        component: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: "{{ .Values.image.repository_kibana }}:{{ .Values.image.tag_kibana }}"
+        env:
+        - name: CLUSTER_NAME
+          value: myesdb
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 100m
+        ports:
+        - containerPort: 5601
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /api/status
+            port: http
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/kibana/config
+            readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Values.configMap.name_kibana }}
