@@ -24,9 +24,9 @@ spec:
         image: "{{ .Values.image.repository_logstash }}:{{ .Values.image.tag_logstash }}"
         resources:
           limits:
-            cpu: 0.1
+            cpu: 0.80
           requests:
-            cpu: 0.8
+            cpu: 0.10
         ports:
         - containerPort: 5000
           name: http
